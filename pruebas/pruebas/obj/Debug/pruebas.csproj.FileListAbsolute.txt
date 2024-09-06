@@ -1,0 +1,7 @@
+C:\Users\edwar\Documents\repo\PrograI-semi-2024\pruebas\pruebas\bin\Debug\pruebas.exe.config
+C:\Users\edwar\Documents\repo\PrograI-semi-2024\pruebas\pruebas\bin\Debug\pruebas.exe
+C:\Users\edwar\Documents\repo\PrograI-semi-2024\pruebas\pruebas\bin\Debug\pruebas.pdb
+C:\Users\edwar\Documents\repo\PrograI-semi-2024\pruebas\pruebas\obj\Debug\pruebas.csproj.AssemblyReference.cache
+C:\Users\edwar\Documents\repo\PrograI-semi-2024\pruebas\pruebas\obj\Debug\pruebas.csproj.CoreCompileInputs.cache
+C:\Users\edwar\Documents\repo\PrograI-semi-2024\pruebas\pruebas\obj\Debug\pruebas.exe
+C:\Users\edwar\Documents\repo\PrograI-semi-2024\pruebas\pruebas\obj\Debug\pruebas.pdb
