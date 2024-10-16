@@ -38,6 +38,7 @@ namespace academica
             this.docentesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.notasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.usuariosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxAcademica.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -76,7 +77,8 @@ namespace academica
             this.materiasToolStripMenuItem,
             this.docentesToolStripMenuItem,
             this.toolStripMenuItem1,
-            this.notasToolStripMenuItem});
+            this.notasToolStripMenuItem,
+            this.usuariosToolStripMenuItem});
             this.aplicacionToolStripMenuItem.Name = "aplicacionToolStripMenuItem";
             this.aplicacionToolStripMenuItem.Size = new System.Drawing.Size(93, 24);
             this.aplicacionToolStripMenuItem.Text = "Aplicacion";
@@ -117,6 +119,13 @@ namespace academica
             this.notasToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.notasToolStripMenuItem.Text = "Notas";
             // 
+            // usuariosToolStripMenuItem
+            // 
+            this.usuariosToolStripMenuItem.Name = "usuariosToolStripMenuItem";
+            this.usuariosToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.usuariosToolStripMenuItem.Text = "usuarios";
+            this.usuariosToolStripMenuItem.Click += new System.EventHandler(this.usuariosToolStripMenuItem_Click);
+            // 
             // principal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -126,7 +135,7 @@ namespace academica
             this.Controls.Add(this.mnxAcademica);
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.mnxAcademica;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "principal";
             this.Text = "APLICACION ACADEMICA";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -148,5 +157,6 @@ namespace academica
         private System.Windows.Forms.ToolStripMenuItem docentesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem notasToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem usuariosToolStripMenuItem;
     }
 }

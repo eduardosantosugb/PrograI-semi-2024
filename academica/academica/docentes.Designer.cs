@@ -386,6 +386,7 @@
             this.txtTelefonoDocente.Name = "txtTelefonoDocente";
             this.txtTelefonoDocente.Size = new System.Drawing.Size(132, 22);
             this.txtTelefonoDocente.TabIndex = 6;
+            this.txtTelefonoDocente.TextChanged += new System.EventHandler(this.txtTelefonoDocente_TextChanged);
             // 
             // lblDireccionDocente
             // 
@@ -443,6 +444,7 @@
             this.txtCodigoDocente.Name = "txtCodigoDocente";
             this.txtCodigoDocente.Size = new System.Drawing.Size(132, 22);
             this.txtCodigoDocente.TabIndex = 0;
+            this.txtCodigoDocente.TextChanged += new System.EventHandler(this.txtCodigoDocente_TextChanged);
             // 
             // docentes
             // 

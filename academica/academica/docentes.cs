@@ -242,6 +242,16 @@ namespace academica
                     MessageBox.Show("No se encontró el nombre. Intente de nuevo.", "Error");
                 }
             }
+
+        private void txtCodigoDocente_TextChanged(object sender, EventArgs e)
+        {
+
         }
+
+        private void txtTelefonoDocente_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
     }
 

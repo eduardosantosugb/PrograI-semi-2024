@@ -42,5 +42,13 @@ namespace academica
             objForm.MdiParent = this;
             objForm.Show();
         }
+
+        private void usuariosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            login  objForm = new login ();
+            objForm.MdiParent = this;
+            objForm.Show();
+        }
     }
 }
