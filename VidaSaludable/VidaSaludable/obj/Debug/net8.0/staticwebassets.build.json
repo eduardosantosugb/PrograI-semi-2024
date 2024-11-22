@@ -1,0 +1,58 @@
+{
+  "Version": 1,
+  "Hash": "BdQEetC7XVMjuL49m8+LXxl/RHvmOpkEMXcBWl87HG8=",
+  "Source": "VidaSaludable",
+  "BasePath": "_content/VidaSaludable",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "VidaSaludable\\wwwroot",
+      "Source": "VidaSaludable",
+      "ContentRoot": "C:\\Users\\MINEDUCYT\\source\\repos\\PrograI-semi-2024\\VidaSaludable\\VidaSaludable\\wwwroot\\",
+      "BasePath": "_content/VidaSaludable",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\MINEDUCYT\\source\\repos\\PrograI-semi-2024\\VidaSaludable\\VidaSaludable\\wwwroot\\login.html",
+      "SourceId": "VidaSaludable",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\MINEDUCYT\\source\\repos\\PrograI-semi-2024\\VidaSaludable\\VidaSaludable\\wwwroot\\",
+      "BasePath": "_content/VidaSaludable",
+      "RelativePath": "login.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\login.html"
+    },
+    {
+      "Identity": "C:\\Users\\MINEDUCYT\\source\\repos\\PrograI-semi-2024\\VidaSaludable\\VidaSaludable\\wwwroot\\register.html",
+      "SourceId": "VidaSaludable",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\MINEDUCYT\\source\\repos\\PrograI-semi-2024\\VidaSaludable\\VidaSaludable\\wwwroot\\",
+      "BasePath": "_content/VidaSaludable",
+      "RelativePath": "register.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\register.html"
+    }
+  ]
+}
