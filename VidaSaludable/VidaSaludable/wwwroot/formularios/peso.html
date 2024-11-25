@@ -1,0 +1,167 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta de Peso</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans antialiased">
+
+    <div id="app" class="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md mt-8">
+        <h2 class="text-2xl font-bold text-green-600 mb-4">Encuesta de Salud - Peso</h2>
+
+        <!-- Formulario de Crear -->
+        <form id="pesoForm" class="mt-6">
+            <div id="formulario-crear">
+                <label for="peso" class="block text-gray-700">¿Cuál es tu peso en kilogramos (kg)?</label>
+                <input type="number" step="0.1" id="peso" class="w-full p-2 border rounded-md mt-2" placeholder="Ejemplo: 70" required>
+
+                <label for="altura" class="block text-gray-700 mt-4">¿Cuál es tu altura en metros (m)?</label>
+                <input type="number" step="0.01" id="altura" class="w-full p-2 border rounded-md mt-2" placeholder="Ejemplo: 1.75" required>
+
+                <label for="edad" class="block text-gray-700 mt-4">¿Cuál es tu edad?</label>
+                <input type="number" id="edad" class="w-full p-2 border rounded-md mt-2" placeholder="Ejemplo: 25" required>
+
+                <button type="submit" class="mt-4 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-500 transition">Guardar</button>
+            </div>
+        </form>
+
+        <!-- Resultados y Formulario de Actualizar -->
+        <div id="resultados" class="hidden mt-6">
+            <h3 class="text-xl font-bold" id="resultado-titulo"></h3>
+            <p class="mt-2 text-gray-700" id="resultado-descripcion"></p>
+            <div class="mt-4 flex justify-between">
+                <button id="btn-actualizar" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition">Actualizar</button>
+                <button id="btn-borrar" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-500 transition">Borrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('usuario'));
+        let registroId = null; // Variable para almacenar el ID del registro
+
+        window.onload = async function () {
+            if (!user) {
+                window.location.href = 'login.html'; // Si no hay usuario, redirige al login
+            }
+
+            try {
+                const response = await fetch(`https://localhost:7190/api/Pesos/Usuario/${user.id}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data) {
+                        registroId = data.id;
+                        mostrarResultados(data);
+                    } else {
+                        document.getElementById('pesoForm').classList.remove('hidden');
+                    }
+                }
+            } catch (error) {
+                console.error('Error al cargar el peso:', error);
+            }
+        };
+
+        // Mostrar resultados si ya existe un registro
+        function mostrarResultados(data) {
+            document.getElementById('pesoForm').classList.add('hidden');
+            document.getElementById('resultados').classList.remove('hidden');
+
+            document.getElementById('resultado-titulo').textContent = `Tu resultado: ${data.resultado}`;
+            document.getElementById('resultado-descripcion').textContent =
+                `IMC: ${data.imc}. Peso: ${data.pesoKg}kg. Recomendación: ${data.recomendacion}.`;
+        }
+
+        // Manejar el envío del formulario para crear o actualizar
+        document.getElementById('pesoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const peso = parseFloat(document.getElementById('peso').value);
+            const altura = parseFloat(document.getElementById('altura').value) * 100; // Convertir metros a cm
+            const edad = parseInt(document.getElementById('edad').value);
+
+            const payload = {
+                PesoKg: peso,
+                UsuarioId: user.id,
+                Usuario: { Estatura: altura }
+            };
+
+            try {
+                let response;
+                if (registroId) {
+                    // Si ya hay un registro, hacer actualización
+                    response = await fetch(`https://localhost:7190/api/Pesos/${registroId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                } else {
+                    // Si no hay registro, crear uno nuevo
+                    response = await fetch('https://localhost:7190/api/Pesos', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                }
+
+                if (response.ok) {
+                    const data = await response.json();
+                    registroId = data.id; // Guardar el ID del registro
+                    mostrarResultados(data);
+                } else {
+                    alert('Error al guardar o actualizar los datos.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+        // Actualizar los datos y mostrar el formulario para edición
+        document.getElementById('btn-actualizar').addEventListener('click', () => {
+            if (!registroId) {
+                alert('No hay datos para actualizar.');
+                return;
+            }
+
+            document.getElementById('resultados').classList.add('hidden');
+            document.getElementById('pesoForm').classList.remove('hidden');
+        });
+
+        // Borrar los datos
+        document.getElementById('btn-borrar').addEventListener('click', async () => {
+            if (!registroId) {
+                alert('No hay datos para borrar.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`https://localhost:7190/api/Pesos/Eliminar/${registroId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert('Registro eliminado correctamente.');
+                    resetFormulario();
+                } else {
+                    alert('Error al borrar los datos.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+        // Resetear el formulario y ocultar resultados
+        function resetFormulario() {
+            document.getElementById('pesoForm').reset();
+            registroId = null;
+            document.getElementById('resultados').classList.add('hidden');
+            document.getElementById('pesoForm').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

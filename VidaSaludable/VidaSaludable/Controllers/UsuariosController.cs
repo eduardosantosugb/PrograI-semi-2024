@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using VidaSaludable.Models;
 
 namespace VidaSaludable.Controllers
@@ -43,7 +42,6 @@ namespace VidaSaludable.Controllers
         }
 
         // PUT: api/Usuarios/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUsuario(int id, Usuario usuario)
         {
@@ -77,17 +75,21 @@ namespace VidaSaludable.Controllers
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] Usuario usuario)
         {
-            if (string.IsNullOrEmpty(usuario.Email) || string.IsNullOrEmpty(usuario.Contra))
+            // Verificación de los datos
+            if (string.IsNullOrEmpty(usuario.Email) || string.IsNullOrEmpty(usuario.Contra) || string.IsNullOrEmpty(usuario.Nombre)
+                || string.IsNullOrEmpty(usuario.Sexo) || usuario.Edad <= 0 || usuario.Estatura <= 0)
             {
-                return BadRequest(new { message = "El correo y la contraseña son requeridos." });
+                return BadRequest(new { message = "Todos los campos son requeridos." });
             }
 
+            // Verifica si ya existe un usuario con el mismo correo
             var usuarioExiste = await _context.Usuario.FirstOrDefaultAsync(u => u.Email == usuario.Email);
             if (usuarioExiste != null)
             {
                 return BadRequest(new { message = "Este correo ya está registrado." });
             }
 
+            // Agrega el nuevo usuario a la base de datos
             _context.Usuario.Add(usuario);
             await _context.SaveChangesAsync();
 
@@ -95,6 +97,8 @@ namespace VidaSaludable.Controllers
         }
 
         // POST: api/Usuarios/login
+        // Esta ruta verifica las credenciales del usuario (correo y contraseña) en la base de datos.
+        // Si las credenciales son correctas, el usuario puede iniciar sesión. Si no, se devolverá un error de "Credenciales incorrectas".
         [HttpPost("login")]
         public async Task<ActionResult> Login([FromBody] usuarioLogin usuarioLogin)
         {

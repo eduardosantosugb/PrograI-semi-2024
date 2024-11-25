@@ -8,24 +8,31 @@
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 class="text-2xl font-bold mb-6 text-gray-700 text-center">Iniciar Sesión</h1>
+        <h1 class="text-2xl font-bold mb-6 text-green-700 text-center">Iniciar Sesión</h1>
         <form id="loginForm">
             <div class="mb-4">
-                <label for="email" class="block text-gray-600">Correo Electrónico</label>
-                <input type="email" id="email" name="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Ingresa tu correo">
+                <label for="email" class="block text-green-600">Correo Electrónico</label>
+                <input type="email" id="email" name="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="Ingresa tu correo">
             </div>
             <div class="mb-4">
-                <label for="contra" class="block text-gray-600">Contraseña</label>
-                <input type="password" id="contra" name="contra" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Ingresa tu contraseña">
+                <label for="contra" class="block text-green-600">Contraseña</label>
+                <input type="password" id="contra" name="contra" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="Ingresa tu contraseña">
             </div>
-            <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">Iniciar Sesión</button>
+            <button type="submit" class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition">Iniciar Sesión</button>
         </form>
-        <p class="text-gray-600 text-sm mt-4 text-center">
+        <p class="text-green-600 text-sm mt-4 text-center">
             ¿No tienes una cuenta?
-            <a href="register.html" class="text-blue-500 hover:underline">Regístrate</a>
+            <a href="register.html" class="text-green-500 hover:underline">Regístrate</a>
         </p>
     </div>
     <script>
+        window.onload = function () {
+            const user = JSON.parse(localStorage.getItem('usuario'));
+            if (user) {
+                window.location.href = 'index.html'; // Si hay un usuario, redirige al dashboard
+            }
+        };
+
         const loginForm = document.getElementById('loginForm');
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -42,7 +49,7 @@
             if (response.ok) {
                 localStorage.setItem('usuario', JSON.stringify(data.usuario));
                 alert('Inicio de sesión exitoso');
-                window.location.href = '/dashboard.html';
+                window.location.href = '/index.html';
             } else {
                 alert(data.message);
             }
