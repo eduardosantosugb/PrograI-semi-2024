@@ -1,8 +1,24 @@
 {
   "Files": [
     {
+      "Id": "C:\\Users\\MINEDUCYT\\source\\repos\\PrograI-semi-2024\\VidaSaludable\\VidaSaludable\\wwwroot\\formularios\\actividades.html",
+      "PackagePath": "staticwebassets\\formularios\\actividades.html"
+    },
+    {
+      "Id": "C:\\Users\\MINEDUCYT\\source\\repos\\PrograI-semi-2024\\VidaSaludable\\VidaSaludable\\wwwroot\\formularios\\dietas.html",
+      "PackagePath": "staticwebassets\\formularios\\dietas.html"
+    },
+    {
+      "Id": "C:\\Users\\MINEDUCYT\\source\\repos\\PrograI-semi-2024\\VidaSaludable\\VidaSaludable\\wwwroot\\formularios\\historial.html",
+      "PackagePath": "staticwebassets\\formularios\\historial.html"
+    },
+    {
       "Id": "C:\\Users\\MINEDUCYT\\source\\repos\\PrograI-semi-2024\\VidaSaludable\\VidaSaludable\\wwwroot\\formularios\\meta.html",
       "PackagePath": "staticwebassets\\formularios\\meta.html"
+    },
+    {
+      "Id": "C:\\Users\\MINEDUCYT\\source\\repos\\PrograI-semi-2024\\VidaSaludable\\VidaSaludable\\wwwroot\\formularios\\metas.html",
+      "PackagePath": "staticwebassets\\formularios\\metas.html"
     },
     {
       "Id": "C:\\Users\\MINEDUCYT\\source\\repos\\PrograI-semi-2024\\VidaSaludable\\VidaSaludable\\wwwroot\\formularios\\peso.html",

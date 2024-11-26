@@ -15,7 +15,5 @@ namespace VidaSaludable.Models
         public string? Progreso { get; set; } // Detalles del progreso (duración, intensidad, etc.)
         public string? Comentario { get; set; }
 
-        // Relación con Actividad
-        public Actividad Actividad { get; set; } = null!;
     }
 }

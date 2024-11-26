@@ -17,7 +17,7 @@ namespace VidaSaludable.Models
         public DbSet<Dieta> Dieta { get; set; }
         public DbSet<HistorialDieta> HistorialDieta { get; set; }
         public DbSet<Meta> Meta { get; set; }
-        public DbSet<Actividad> Actividade { get; set; }
+        public DbSet<Actividad> Actividad { get; set; }
         public DbSet<HistorialActividades> HistorialActividad { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

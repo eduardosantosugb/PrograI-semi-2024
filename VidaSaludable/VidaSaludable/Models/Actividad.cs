@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -16,9 +17,7 @@ namespace VidaSaludable.Models
         public string Estado { get; set; } = null!; // Activa, Completada, Cancelada
 
         // Relación con Usuario
+        [ValidateNever]
         public Usuario Usuario { get; set; } = null!;
-
-        // Relación con HistorialActividades
-        public ICollection<HistorialActividades> HistorialActividades { get; set; } = new List<HistorialActividades>();
     }
 }

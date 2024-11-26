@@ -1,0 +1,191 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Avances por Dieta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body class="bg-green-100 font-sans">
+
+    <div class="container mx-auto p-4">
+        <h1 class="text-3xl font-semibold text-green-700">Gestión de Avances</h1>
+        <!-- Lista de dietas con avances -->
+        <div id="listaDietas" class="mt-6 space-y-6"></div>
+    </div>
+
+    <!-- Modal para agregar o editar avance -->
+    <div id="modalHistorial" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden justify-center items-center">
+        <div class="bg-white p-8 rounded shadow-lg w-1/3">
+            <h2 id="modalTitulo" class="text-2xl text-green-700 mb-4">Agregar Avance</h2>
+            <form id="formHistorial" class="space-y-4">
+                <input type="hidden" id="historialId">
+                <input type="hidden" id="dietaIdHistorial">
+
+                <div class="mb-4">
+                    <label for="pesoHistorial" class="block text-lg text-gray-700">Peso Actual</label>
+                    <input type="number" id="pesoHistorial" class="w-full p-2 mt-2 border border-gray-300 rounded" step="0.1" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="comentarioHistorial" class="block text-lg text-gray-700">Comentario</label>
+                    <textarea id="comentarioHistorial" class="w-full p-2 mt-2 border border-gray-300 rounded"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-green-600 text-white p-2 rounded hover:bg-green-500">
+                    Guardar
+                </button>
+            </form>
+            <button onclick="cerrarModal()" class="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-400 w-full">
+                Cancelar
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('usuario'));
+
+        window.onload = function () {
+            if (!user) {
+                window.location.href = 'login.html';
+            } else {
+                obtenerDietas();
+            }
+        };
+
+        function obtenerDietas() {
+            fetch(`https://localhost:7190/api/dietas/usuario/${user.id}`)
+                .then(response => response.json())
+                .then(dietas => {
+                    const listaDietas = document.getElementById('listaDietas');
+                    listaDietas.innerHTML = '';
+
+                    dietas.forEach(dieta => {
+                        const div = document.createElement('div');
+                        div.classList.add('bg-white', 'p-4', 'rounded', 'shadow', 'space-y-4');
+                        div.innerHTML = `
+                                <div>
+                                    <p class="text-xl text-green-800">${dieta.tipoDieta}</p>
+                                    <p class="text-sm text-gray-600">Fecha de Inicio: ${dieta.fechaInicio}</p>
+                                    <p class="text-sm text-gray-600">Kilos Iniciales: ${dieta.kilosIniciales}</p>
+                                </div>
+                                <button onclick="abrirModal(${dieta.id})" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-400">
+                                    Agregar Avance
+                                </button>
+                                <div id="historialDieta${dieta.id}" class="mt-4 space-y-2">
+                                    <h3 class="text-lg text-green-600">Avances:</h3>
+                                    <ul id="listaAvances${dieta.id}" class="space-y-2"></ul>
+                                </div>
+                            `;
+                        listaDietas.appendChild(div);
+                        cargarAvances(dieta.id);
+                    });
+                });
+        }
+
+        function cargarAvances(dietaId) {
+            fetch(`https://localhost:7190/api/historiales/dieta/${dietaId}`)
+                .then(response => response.json())
+                .then(avances => {
+                    const listaAvances = document.getElementById(`listaAvances${dietaId}`);
+                    listaAvances.innerHTML = '';
+
+                    avances.forEach(avance => {
+                        const li = document.createElement('li');
+                        li.classList.add('bg-gray-100', 'p-2', 'rounded', 'shadow');
+                        li.innerHTML = `
+                                <div>
+                                    <p><strong>Fecha:</strong> ${new Date(avance.fecha).toLocaleDateString()}</p>
+                                    <p><strong>Peso:</strong> ${avance.peso} kg</p>
+                                    <p><strong>Comentario:</strong> ${avance.comentario || 'Sin comentario'}</p>
+                                    <button onclick="editarAvance(${avance.id}, ${dietaId})" class="text-blue-500 hover:text-blue-400">Editar</button>
+                                    <button onclick="eliminarAvance(${avance.id}, ${dietaId})" class="text-red-500 hover:text-red-400">Eliminar</button>
+                                </div>
+                            `;
+                        listaAvances.appendChild(li);
+                    });
+                });
+        }
+
+        function abrirModal(dietaId) {
+            document.getElementById('modalTitulo').textContent = 'Agregar Avance';
+            document.getElementById('formHistorial').onsubmit = guardarAvance;
+            document.getElementById('historialId').value = '';
+            document.getElementById('dietaIdHistorial').value = dietaId;
+            document.getElementById('pesoHistorial').value = '';
+            document.getElementById('comentarioHistorial').value = '';
+            document.getElementById('modalHistorial').classList.remove('hidden');
+        }
+
+        function editarAvance(avanceId, dietaId) {
+            fetch(`https://localhost:7190/api/historiales/${avanceId}`)
+                .then(response => response.json())
+                .then(avance => {
+                    document.getElementById('modalTitulo').textContent = 'Editar Avance';
+                    document.getElementById('formHistorial').onsubmit = function (event) {
+                        event.preventDefault();
+                        actualizarAvance(avanceId, dietaId);
+                    };
+                    document.getElementById('historialId').value = avanceId;
+                    document.getElementById('dietaIdHistorial').value = dietaId;
+                    document.getElementById('pesoHistorial').value = avance.peso;
+                    document.getElementById('comentarioHistorial').value = avance.comentario;
+                    document.getElementById('modalHistorial').classList.remove('hidden');
+                });
+        }
+
+        function cerrarModal() {
+            document.getElementById('modalHistorial').classList.add('hidden');
+            document.getElementById('formHistorial').reset();
+        }
+
+        function guardarAvance(event) {
+            event.preventDefault();
+            const avance = {
+                dietaId: document.getElementById('dietaIdHistorial').value,
+                peso: parseFloat(document.getElementById('pesoHistorial').value),
+                comentario: document.getElementById('comentarioHistorial').value,
+                fecha: new Date().toISOString()
+            };
+            fetch('https://localhost:7190/api/historiales', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(avance)
+            })
+                .then(() => {
+                    cerrarModal();
+                    cargarAvances(avance.dietaId);
+                });
+        }
+
+        function actualizarAvance(avanceId, dietaId) {
+            const avance = {
+                id: avanceId, // Agregar el ID del avance al objeto
+                peso: parseFloat(document.getElementById('pesoHistorial').value),
+                comentario: document.getElementById('comentarioHistorial').value,
+                fecha: new Date().toISOString()
+            };
+            fetch(`https://localhost:7190/api/historiales/${avanceId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(avance)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        cerrarModal();
+                        cargarAvances(dietaId);
+                    } else {
+                        response.text().then(text => console.error('Error:', text));
+                    }
+                })
+                .catch(error => console.error('Error de red:', error));
+        }
+
+        function eliminarAvance(avanceId, dietaId) {
+            fetch(`https://localhost:7190/api/historiales/${avanceId}`, { method: 'DELETE' })
+                .then(() => cargarAvances(dietaId));
+        }
+    </script>
+</body>
+</html>

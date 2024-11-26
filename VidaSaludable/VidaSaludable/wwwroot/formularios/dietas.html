@@ -1,0 +1,256 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Dietas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-green-100 font-sans">
+
+    <div class="container mx-auto p-4">
+        <h1 class="text-3xl font-semibold text-green-700">Gestión de Dietas</h1>
+
+        <!-- Botón para abrir el modal de creación -->
+        <button onclick="abrirModalCrear()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-500 mt-4">Añadir Dieta</button>
+
+        <!-- Modal para crear dieta -->
+        <div id="modalCrear" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden justify-center items-center">
+            <div class="bg-white p-8 rounded shadow-lg w-1/3">
+                <h2 class="text-2xl text-green-700 mb-4">Añadir Dieta</h2>
+
+                <form id="formCrearDieta" class="space-y-4">
+                    <input type="hidden" id="dietaIdCrear">
+
+                    <div class="mb-4">
+                        <label for="tipoDietaCrear" class="block text-lg text-gray-700">Tipo de Dieta</label>
+                        <input type="text" id="tipoDietaCrear" class="w-full p-2 mt-2 border border-gray-300 rounded" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="fechaInicioCrear" class="block text-lg text-gray-700">Fecha de Inicio</label>
+                        <input type="date" id="fechaInicioCrear" class="w-full p-2 mt-2 border border-gray-300 rounded" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="estadoCrear" class="block text-lg text-gray-700">Estado</label>
+                        <select id="estadoCrear" class="w-full p-2 mt-2 border border-gray-300 rounded">
+                            <option value="Activa">Activa</option>
+                            <option value="Finalizada">Finalizada</option>
+                            <option value="Cancelada">Cancelada</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="kilosInicialesCrear" class="block text-lg text-gray-700">Kilos Iniciales</label>
+                        <input type="number" id="kilosInicialesCrear" class="w-full p-2 mt-2 border border-gray-300 rounded" step="0.1" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="kilosFinalesCrear" class="block text-lg text-gray-700">Kilos Finales (Opcional)</label>
+                        <input type="number" id="kilosFinalesCrear" class="w-full p-2 mt-2 border border-gray-300 rounded" step="0.1">
+                    </div>
+
+                    <button type="submit" class="w-full bg-green-600 text-white p-2 rounded hover:bg-green-500">
+                        Guardar Dieta
+                    </button>
+                </form>
+
+                <button onclick="cerrarModalCrear()" class="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-400 w-full">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+
+        <!-- Modal para editar dieta -->
+        <div id="modalEditar" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden justify-center items-center">
+            <div class="bg-white p-8 rounded shadow-lg w-1/3">
+                <h2 class="text-2xl text-green-700 mb-4">Editar Dieta</h2>
+
+                <form id="formEditarDieta" class="space-y-4">
+                    <input type="hidden" id="dietaIdEditar">
+
+                    <div class="mb-4">
+                        <label for="tipoDietaEditar" class="block text-lg text-gray-700">Tipo de Dieta</label>
+                        <input type="text" id="tipoDietaEditar" class="w-full p-2 mt-2 border border-gray-300 rounded" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="fechaInicioEditar" class="block text-lg text-gray-700">Fecha de Inicio</label>
+                        <input type="date" id="fechaInicioEditar" class="w-full p-2 mt-2 border border-gray-300 rounded" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="estadoEditar" class="block text-lg text-gray-700">Estado</label>
+                        <select id="estadoEditar" class="w-full p-2 mt-2 border border-gray-300 rounded">
+                            <option value="Activa">Activa</option>
+                            <option value="Finalizada">Finalizada</option>
+                            <option value="Cancelada">Cancelada</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="kilosInicialesEditar" class="block text-lg text-gray-700">Kilos Iniciales</label>
+                        <input type="number" id="kilosInicialesEditar" class="w-full p-2 mt-2 border border-gray-300 rounded" step="0.1" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="kilosFinalesEditar" class="block text-lg text-gray-700">Kilos Finales (Opcional)</label>
+                        <input type="number" id="kilosFinalesEditar" class="w-full p-2 mt-2 border border-gray-300 rounded" step="0.1">
+                    </div>
+
+                    <button type="submit" class="w-full bg-green-600 text-white p-2 rounded hover:bg-green-500">
+                        Guardar Cambios
+                    </button>
+                </form>
+
+                <button onclick="cerrarModalEditar()" class="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-400 w-full">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+
+        <!-- Lista de dietas -->
+        <div class="mt-6">
+            <h2 class="text-2xl text-green-700 mb-4">Lista de Dietas</h2>
+            <ul id="listaDietas" class="space-y-4"></ul>
+        </div>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('usuario'));
+
+        window.onload = async function () {
+            if (!user) {
+                window.location.href = 'login.html';
+            } else {
+                obtenerDietas();
+            }
+        };
+
+        function obtenerDietas() {
+            fetch(`https://localhost:7190/api/dietas/usuario/${user.id}`)
+                .then(response => response.json())
+                .then(data => {
+                    const listaDietas = document.getElementById('listaDietas');
+                    listaDietas.innerHTML = '';
+
+                    data.forEach(dieta => {
+                        const li = document.createElement('li');
+                        li.classList.add('bg-white', 'p-4', 'rounded', 'shadow');
+                        li.innerHTML = `
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="text-xl text-green-800">${dieta.tipoDieta}</p>
+                                        <p class="text-sm text-gray-600">Fecha de Inicio: ${dieta.fechaInicio}</p>
+                                        <p class="text-sm text-gray-600">Estado: ${dieta.estado}</p>
+                                        <p class="text-sm text-gray-600">Kilos Iniciales: ${dieta.kilosIniciales}</p>
+                                        <p class="text-sm text-gray-600">Kilos Finales: ${dieta.kilosFinales || 'No disponible'}</p>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button onclick="editarDieta(${dieta.id})" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-400">Editar</button>
+                                        <button onclick="eliminarDieta(${dieta.id})" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-400">Eliminar</button>
+                                    </div>
+                                </div>
+                            `;
+                        listaDietas.appendChild(li);
+                    });
+                });
+        }
+
+        function abrirModalCrear() {
+            document.getElementById('modalCrear').classList.remove('hidden');
+        }
+
+        function cerrarModalCrear() {
+            document.getElementById('modalCrear').classList.add('hidden');
+            limpiarFormularioCrear();
+        }
+
+        function abrirModalEditar() {
+            document.getElementById('modalEditar').classList.remove('hidden');
+        }
+
+        function cerrarModalEditar() {
+            document.getElementById('modalEditar').classList.add('hidden');
+            limpiarFormularioEditar();
+        }
+
+        function limpiarFormularioCrear() {
+            document.getElementById('formCrearDieta').reset();
+        }
+
+        function limpiarFormularioEditar() {
+            document.getElementById('formEditarDieta').reset();
+        }
+
+        document.getElementById('formCrearDieta').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const dieta = {
+                usuarioId: user.id,
+                tipoDieta: document.getElementById('tipoDietaCrear').value,
+                fechaInicio: document.getElementById('fechaInicioCrear').value,
+                estado: document.getElementById('estadoCrear').value,
+                kilosIniciales: parseFloat(document.getElementById('kilosInicialesCrear').value),
+                kilosFinales: document.getElementById('kilosFinalesCrear').value ? parseFloat(document.getElementById('kilosFinalesCrear').value) : null
+            };
+
+            fetch('https://localhost:7190/api/dietas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dieta)
+            })
+                .then(() => {
+                    obtenerDietas();
+                    cerrarModalCrear();
+                });
+        });
+
+        function editarDieta(id) {
+            fetch(`https://localhost:7190/api/dietas/${id}`)
+                .then(response => response.json())
+                .then(dieta => {
+                    document.getElementById('dietaIdEditar').value = dieta.id;
+                    document.getElementById('tipoDietaEditar').value = dieta.tipoDieta;
+                    document.getElementById('fechaInicioEditar').value = dieta.fechaInicio.split('T')[0];
+                    document.getElementById('estadoEditar').value = dieta.estado;
+                    document.getElementById('kilosInicialesEditar').value = dieta.kilosIniciales;
+                    document.getElementById('kilosFinalesEditar').value = dieta.kilosFinales || '';
+                    abrirModalEditar();
+                });
+        }
+
+        document.getElementById('formEditarDieta').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const dieta = {
+                id: document.getElementById('dietaIdEditar').value,
+                usuarioId: user.id,
+                tipoDieta: document.getElementById('tipoDietaEditar').value,
+                fechaInicio: document.getElementById('fechaInicioEditar').value,
+                estado: document.getElementById('estadoEditar').value,
+                kilosIniciales: parseFloat(document.getElementById('kilosInicialesEditar').value),
+                kilosFinales: document.getElementById('kilosFinalesEditar').value ? parseFloat(document.getElementById('kilosFinalesEditar').value) : null
+            };
+
+            fetch(`https://localhost:7190/api/dietas/${dieta.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dieta)
+            })
+                .then(() => {
+                    obtenerDietas();
+                    cerrarModalEditar();
+                });
+        });
+
+        function eliminarDieta(id) {
+            fetch(`https://localhost:7190/api/dietas/${id}`, { method: 'DELETE' })
+                .then(() => {
+                    obtenerDietas();
+                });
+        }
+    </script>
+</body>
+</html>

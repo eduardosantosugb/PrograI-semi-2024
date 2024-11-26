@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace VidaSaludable.Models
         public string? Comentario { get; set; }
 
         // Relación con Dieta
+        [ValidateNever]
         public Dieta Dieta { get; set; } = null!;
     }
 }

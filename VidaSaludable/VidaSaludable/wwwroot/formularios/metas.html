@@ -11,10 +11,8 @@
     <div class="container mx-auto p-4">
         <h1 class="text-3xl font-semibold text-green-700">Gestión de Metas</h1>
 
-        <!-- Formulario para añadir o editar metas -->
+        <!-- Formulario para añadir metas -->
         <form id="formMeta" class="mt-4 p-4 bg-white rounded shadow-lg">
-            <input type="hidden" id="metaId">
-
             <div class="mb-4">
                 <label for="descripcion" class="block text-lg text-gray-700">Descripción</label>
                 <input type="text" id="descripcion" class="w-full p-2 mt-2 border border-gray-300 rounded" required>
@@ -23,14 +21,6 @@
             <div class="mb-4">
                 <label for="fechaMeta" class="block text-lg text-gray-700">Fecha de la Meta</label>
                 <input type="date" id="fechaMeta" class="w-full p-2 mt-2 border border-gray-300 rounded" required>
-            </div>
-
-            <div class="mb-4">
-                <label for="estado" class="block text-lg text-gray-700">Estado</label>
-                <select id="estado" class="w-full p-2 mt-2 border border-gray-300 rounded">
-                    <option value="Pendiente">Pendiente</option>
-                    <option value="Completada">Completada</option>
-                </select>
             </div>
 
             <button type="submit" class="w-full bg-green-600 text-white p-2 rounded hover:bg-green-500">
@@ -58,7 +48,7 @@
 
         // Obtener todas las metas
         function obtenerMetas() {
-            fetch('https://localhost:7190/api/metas')
+            fetch(`https://localhost:7190/api/metas/usuario/${user.id}`)
                 .then(response => response.json())
                 .then(data => {
                     const listaMetas = document.getElementById('listaMetas');
@@ -66,77 +56,68 @@
 
                     data.forEach(meta => {
                         const li = document.createElement('li');
-                        li.classList.add('bg-white', 'p-4', 'rounded', 'shadow');
+                        li.classList.add('bg-white', 'p-4', 'rounded', 'shadow', 'flex', 'justify-between', 'items-center');
+
+                        // Definir estilos dinámicos para metas completadas
+                        const textoClase = meta.estado === 'Completada' ? 'line-through text-gray-500' : 'text-green-800';
+
                         li.innerHTML = `
-                                <div class="flex justify-between items-center">
+                                <div class="flex items-center space-x-4">
+                                    <button
+                                        onclick="alternarEstado(${meta.id}, '${meta.estado}')"
+                                        class="w-6 h-6 rounded-full border-2 border-green-600 flex items-center justify-center hover:bg-green-600 hover:text-white">
+                                        ${meta.estado === 'Completada' ? '✔️' : ''}
+                                    </button>
                                     <div>
-                                        <p class="text-xl text-green-800">${meta.descripcion}</p>
+                                        <p class="text-xl ${textoClase}">${meta.descripcion}</p>
                                         <p class="text-sm text-gray-600">Fecha: ${meta.fechaMeta}</p>
-                                        <p class="text-sm text-gray-600">Estado: ${meta.estado}</p>
-                                    </div>
-                                    <div class="flex space-x-2">
-                                        <button onclick="editarMeta(${meta.id})" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-400">Editar</button>
-                                        <button onclick="eliminarMeta(${meta.id})" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-400">Eliminar</button>
                                     </div>
                                 </div>
+                                <button onclick="eliminarMeta(${meta.id})" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-400">Eliminar</button>
                             `;
+
                         listaMetas.appendChild(li);
                     });
                 });
         }
 
-        // Crear o actualizar una meta
+        // Crear una nueva meta
         document.getElementById('formMeta').addEventListener('submit', function (event) {
             event.preventDefault();
 
-            let id = document.getElementById('metaId').value || null;  // Si no hay id, se crea uno nuevo
-
             const meta = {
-                usuarioId: user.id, // Usuario actual
+                usuarioId: user.id,
                 descripcion: document.getElementById('descripcion').value,
                 fechaMeta: document.getElementById('fechaMeta').value,
-                estado: document.getElementById('estado').value
+                estado: 'Pendiente'
             };
 
-            if (id) {
-                meta.id = id;
-                // Actualizar meta
-                fetch(`https://localhost:7190/api/metas/${meta.id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(meta)
-                })
-                    .then(() => {
-                        obtenerMetas();
-                        limpiarFormulario();
-                    });
-            } else {
-                // Crear nueva meta (sin id)
-                fetch('https://localhost:7190/api/metas', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(meta)
-                })
-                    .then(() => {
-                        obtenerMetas();
-                        limpiarFormulario();
-                    });
-            }
+            fetch('https://localhost:7190/api/metas', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(meta)
+            })
+                .then(() => {
+                    obtenerMetas();
+                    limpiarFormulario();
+                });
         });
 
-        // Editar meta
-        function editarMeta(id) {
-            fetch(`https://localhost:7190/api/metas/${id}`)
-                .then(response => response.json())
-                .then(meta => {
-                    document.getElementById('metaId').value = meta.id;
-                    document.getElementById('descripcion').value = meta.descripcion;
-                    document.getElementById('fechaMeta').value = meta.fechaMeta;
-                    document.getElementById('estado').value = meta.estado;
+        // Alternar estado de la meta (Pendiente/Completada)
+        function alternarEstado(id, estadoActual) {
+            const nuevoEstado = estadoActual === 'Pendiente' ? 'Completada' : 'Pendiente';
+
+            fetch(`https://localhost:7190/api/metas/${id}/estado`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ estado: nuevoEstado })
+            })
+                .then(() => {
+                    obtenerMetas();
                 });
         }
 
@@ -152,10 +133,8 @@
 
         // Limpiar formulario
         function limpiarFormulario() {
-            document.getElementById('metaId').value = '';
             document.getElementById('descripcion').value = '';
             document.getElementById('fechaMeta').value = '';
-            document.getElementById('estado').value = 'Pendiente';
         }
     </script>
 </body>

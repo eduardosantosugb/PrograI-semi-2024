@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VidaSaludable")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e073f00fc148fde9e2f4987b9889c4487ac30c01")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b1876a5b3fde9b6b349539c476a191bc69e9918a")]
 [assembly: System.Reflection.AssemblyProductAttribute("VidaSaludable")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VidaSaludable")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

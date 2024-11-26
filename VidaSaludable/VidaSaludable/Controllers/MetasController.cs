@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VidaSaludable.Models;
@@ -20,14 +20,23 @@ namespace VidaSaludable.Controllers
             _context = context;
         }
 
-        // GET: api/Metas
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Meta>>> GetMeta()
+        // GET: api/Metas/Usuario/{usuarioId}
+        [HttpGet("Usuario/{usuarioId}")]
+        public async Task<ActionResult<IEnumerable<Meta>>> GetMetasByUsuarioId(int usuarioId)
         {
-            return await _context.Meta.ToListAsync();
+            var metas = await _context.Meta
+                                       .Where(m => m.UsuarioId == usuarioId)
+                                       .ToListAsync();
+
+            if (metas == null || !metas.Any())
+            {
+                return NotFound(); // Si no se encuentran metas para el usuario
+            }
+
+            return metas;
         }
 
-        // GET: api/Metas/5
+        // GET: api/Metas/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<Meta>> GetMeta(int id)
         {
@@ -41,15 +50,26 @@ namespace VidaSaludable.Controllers
             return meta;
         }
 
-        // PUT: api/Metas/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutMeta(int id, Meta meta)
+        // PUT: api/Metas/5/estado
+        [HttpPut("{id}/estado")]
+        public async Task<IActionResult> PutMeta(int id, [FromBody] JsonElement request)
         {
-            if (id != meta.Id)
+            // Verificar que el ID es válido
+            var meta = await _context.Meta.FindAsync(id);
+            if (meta == null)
             {
-                return BadRequest();
+                return NotFound();
             }
+
+            // Validar el campo 'estado' en el cuerpo de la solicitud
+            if (!request.TryGetProperty("estado", out var estadoProperty) || string.IsNullOrEmpty(estadoProperty.GetString()))
+            {
+                return BadRequest(new { message = "El campo 'estado' es obligatorio." });
+            }
+
+            // Actualizar solo el estado de la meta
+            var nuevoEstado = estadoProperty.GetString();
+            meta.Estado = nuevoEstado;
 
             _context.Entry(meta).State = EntityState.Modified;
 
@@ -73,7 +93,6 @@ namespace VidaSaludable.Controllers
         }
 
         // POST: api/Metas
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Meta>> PostMeta(Meta meta)
         {
