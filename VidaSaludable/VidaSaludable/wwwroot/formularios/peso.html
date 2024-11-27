@@ -137,17 +137,6 @@
             }
         });
 
-        // Actualizar los datos y mostrar el formulario para edición
-        document.getElementById('btn-actualizar').addEventListener('click', () => {
-            if (!registroId) {
-                alert('No hay datos para actualizar.');
-                return;
-            }
-
-            document.getElementById('resultados').classList.add('hidden');
-            document.getElementById('pesoForm').classList.remove('hidden');
-        });
-
         // Borrar los datos
         document.getElementById('btn-borrar').addEventListener('click', async () => {
             if (!registroId) {
