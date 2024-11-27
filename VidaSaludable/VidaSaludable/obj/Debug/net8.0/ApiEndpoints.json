@@ -53,24 +53,8 @@
   },
   {
     "ContainingType": "VidaSaludable.Controllers.ActividadController",
-    "Method": "DeleteActividad",
+    "Method": "UpdateActividad",
     "RelativePath": "api/actividades/{id}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "VidaSaludable.Controllers.ActividadController",
-    "Method": "UpdateEstadoActividad",
-    "RelativePath": "api/actividades/{id}/estado",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -81,8 +65,24 @@
         "IsRequired": true
       },
       {
-        "Name": "estadoActualizado",
+        "Name": "actividadActualizada",
         "Type": "VidaSaludable.Models.Actividad",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VidaSaludable.Controllers.ActividadController",
+    "Method": "DeleteActividad",
+    "RelativePath": "api/actividades/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],

@@ -44,19 +44,19 @@ namespace VidaSaludable.Controllers
 
         // PUT: api/Pesos/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPeso(int id, Peso peso)
+        public async Task<IActionResult> PutPeso(int id, [FromBody] Peso peso)
         {
-            if (id != peso.Id)
+            // Buscar el registro en la base de datos
+            var existingPeso = await _context.Peso.FindAsync(id);
+            if (existingPeso == null)
             {
-                return BadRequest();
+                return NotFound(); // Si no existe el registro
             }
 
-            // Recalcular IMC y resultado al actualizar
+            // Calcular IMC y recomendación
             CalcularIMC(peso);
 
-            peso.Usuario = null;
-
-            _context.Entry(peso).State = EntityState.Modified;
+            existingPeso.Usuario = null;
 
             try
             {
@@ -64,17 +64,10 @@ namespace VidaSaludable.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PesoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return Conflict();
             }
 
-            return NoContent();
+            return NoContent(); // Si la actualización fue exitosa
         }
 
         // POST: api/Pesos
@@ -84,7 +77,7 @@ namespace VidaSaludable.Controllers
             // Calcular IMC y resultado antes de guardar
             CalcularIMC(peso);
 
-            peso.Usuario = null;
+            peso.Usuario = null; // Eliminar la referencia circular
 
             _context.Peso.Add(peso);
             await _context.SaveChangesAsync();

@@ -14,7 +14,7 @@ namespace VidaSaludable.Models
         public int UsuarioId { get; set; }
         public string Descripcion { get; set; } = null!;
         public DateTime FechaInicio { get; set; }
-        public string Estado { get; set; } = null!; // Activa, Completada, Cancelada
+        public string Estado { get; set; } = null!;
 
         // Relación con Usuario
         [ValidateNever]

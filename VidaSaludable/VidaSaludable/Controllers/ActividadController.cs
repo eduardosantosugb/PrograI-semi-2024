@@ -25,10 +25,10 @@ namespace VidaSaludable.Controllers
                 .Where(a => a.UsuarioId == usuarioId)
                 .ToListAsync();
 
-            if (!actividades.Any())
-            {
-                return NotFound("No se encontraron actividades para este usuario.");
-            }
+            //if (!actividades.Any())
+            //{
+            //    return NotFound("No se encontraron actividades para este usuario.");
+            //}
 
             return Ok(actividades);
         }
@@ -62,9 +62,9 @@ namespace VidaSaludable.Controllers
             return CreatedAtAction(nameof(GetActividad), new { id = nuevaActividad.Id }, nuevaActividad);
         }
 
-        // Actualizar el estado de una actividad
-        [HttpPut("{id}/estado")]
-        public async Task<IActionResult> UpdateEstadoActividad(int id, [FromBody] Actividad estadoActualizado)
+        // Actualizar una actividad completa
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateActividad(int id, [FromBody] Actividad actividadActualizada)
         {
             var actividad = await _context.Actividad.FindAsync(id);
 
@@ -73,7 +73,9 @@ namespace VidaSaludable.Controllers
                 return NotFound("Actividad no encontrada.");
             }
 
-            actividad.Estado = estadoActualizado.Estado;
+            actividad.Descripcion = actividadActualizada.Descripcion;
+            actividad.FechaInicio = actividadActualizada.FechaInicio;
+            actividad.Estado = actividadActualizada.Estado;
 
             _context.Entry(actividad).State = EntityState.Modified;
 
@@ -92,6 +94,7 @@ namespace VidaSaludable.Controllers
 
             return NoContent();
         }
+
 
         // Eliminar una actividad
         [HttpDelete("{id}")]
